@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Миниатюрный мир — Портал румбоксов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="navigate('home')">
+        <div class="nav-logo-icon">М</div>
+        <span class="nav-logo-text">Миниатюрный мир</span>
+    </div>
+    <ul class="nav-links" id="navLinks">
+        <li><a onclick="navigate('home')" data-page="home">Главная</a></li>
+        <li><a onclick="navigate('catalog')" data-page="catalog">Каталог</a></li>
+        <li><a onclick="navigate('gallery')" data-page="gallery">Галерея</a></li>
+        <li><a onclick="navigate('blog')" data-page="blog">Блог</a></li>
+        <li><a onclick="navigate('about')" data-page="about">О проекте</a></li>
+        <li><a onclick="navigate('faq')" data-page="faq">FAQ</a></li>
+        <li><a onclick="navigate('contacts')" data-page="contacts">Контакты</a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="nav-search-btn" onclick="openSearch()" title="Поиск">🔍</button>
+        <button class="nav-fav-btn" onclick="navigate('favorites')" title="Избранное">
+            ♥ <span class="fav-count hidden" id="favCount">0</span>
+        </button>
+        <button class="nav-mobile-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" onclick="closeMobileMenu()">✕</button>
+    <a onclick="navigate('home'); closeMobileMenu()">Главная</a>
+    <a onclick="navigate('catalog'); closeMobileMenu()">Каталог</a>
+    <a onclick="navigate('gallery'); closeMobileMenu()">Галерея</a>
+    <a onclick="navigate('blog'); closeMobileMenu()">Блог</a>
+    <a onclick="navigate('about'); closeMobileMenu()">О проекте</a>
+    <a onclick="navigate('faq'); closeMobileMenu()">FAQ</a>
+    <a onclick="navigate('contacts'); closeMobileMenu()">Контакты</a>
+    <a onclick="navigate('favorites'); closeMobileMenu()">Избранное ♥</a>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" onclick="closeSearch(event)">
+    <button class="search-close" onclick="closeSearch()">✕</button>
+    <div class="search-box" onclick="event.stopPropagation()">
+        <div class="search-input-wrap">
+            <span>🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск проектов, материалов, тем..." oninput="handleSearch(this.value)">
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); lightboxNav(-1)">‹</button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); lightboxNav(1)">›</button>
+</div>
+
+<!-- BLOG MODAL (НОВОЕ ОКНО ДЛЯ СТАТЕЙ) -->
+<div class="modal" id="blogModal" onclick="closeBlogModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeBlogModal()">✕</button>
+        <div id="blogModalContent"></div>
+    </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div class="page active" id="page-home">
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-bg-circle hero-bg-circle-1"></div>
+            <div class="hero-bg-circle hero-bg-circle-2"></div>
+            <div class="hero-bg-circle hero-bg-circle-3"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge"><span class="hero-badge-dot"></span> Дипломный проект 2026</div>
+                <h1>Мир в <em>миниатюре</em> — ваш уютный уголок</h1>
+                <p class="hero-desc">Информационный портал для ведения проектов миниатюрных интерьеров. Каталог, инструкции, блог и вдохновение для создания маленьких миров.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="navigate('catalog')">Смотреть каталог <span>→</span></button>
+                    <button class="btn btn-outline" onclick="navigate('about')">О проекте</button>
+                </div>
+                <div class="hero-stats">
+                    <div><div class="hero-stat-num">12</div><div class="hero-stat-label">Проектов</div></div>
+                    <div><div class="hero-stat-num">150+</div><div class="hero-stat-label">Материалов</div></div>
+                    <div><div class="hero-stat-num">8</div><div class="hero-stat-label">Категорий</div></div>
+                    <div><div class="hero-stat-num">500+</div><div class="hero-stat-label">Этапов</div></div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-img-wrap">
+                    <img src="https://image.qwenlm.ai/public_source/4d038d07-7f16-4e5d-bfae-2a2b7e366d52/1fce15ef4-dc47-4de4-84d8-4d4910d0180f.png" alt="Румбокс">
+                    <div class="hero-float hero-float-1">
+                        <div class="float-row"><div class="float-icon g">🏠</div><div><div class="float-title">12 проектов</div><div class="float-sub">Разных комнат</div></div></div>
+                    </div>
+                    <div class="hero-float hero-float-2">
+                        <div class="float-row"><div class="float-icon o">⭐</div><div><div class="float-title">4.9 рейтинг</div><div class="float-sub">Средняя оценка</div></div></div>
+                    </div>
+                    <div class="hero-float hero-float-3">
+                        <div class="float-row"><div class="float-icon p">📦</div><div><div class="float-title">150+</div><div class="float-sub">Материалов</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: var(--bg-alt);">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-label">Возможности</div>
+                <h2 class="section-title">Всё для вашего творчества</h2>
+                <p class="section-subtitle">Портал объединяет каталог, инструкции, галерею и сообщество мастеров</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon c1">📚</div>
+                    <h3>Каталог проектов</h3>
+                    <p>Подробные описания, материалы и пошаговые инструкции для каждого проекта</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon c2">🔍</div>
+                    <h3>Умный поиск</h3>
+                    <p>Фильтры по категории, сложности, времени и полнотекстовый поиск по проектам</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon c3">♥</div>
+                    <h3>Избранное</h3>
+                    <p>Сохраняйте проекты в избранное — доступ к ним с любого устройства</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon c4">💬</div>
+                    <h3>Отзывы и блог</h3>
+                    <p>Делитесь впечатлениями, читайте статьи и советы от опытных мастеров</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-label">Популярное</div>
+                <h2 class="section-title">Избранные проекты</h2>
+                <p class="section-subtitle">Самые любимые румбоксы нашего сообщества</p>
+            </div>
+            <div class="projects-grid" id="homeProjects"></div>
+            <div style="text-align: center; margin-top: 48px;" class="reveal">
+                <button class="btn btn-outline" onclick="navigate('catalog')">Все проекты →</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stats-grid">
+            <div class="reveal"><div class="stat-num">12</div><div class="stat-label">Проекта</div></div>
+            <div class="reveal reveal-delay-1"><div class="stat-num">150+</div><div class="stat-label">Материалов</div></div>
+            <div class="reveal reveal-delay-2"><div class="stat-num">8</div><div class="stat-label">Категорий</div></div>
+            <div class="reveal reveal-delay-3"><div class="stat-num">500+</div><div class="stat-label">Этапов</div></div>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="section-container">
+            <div class="about-grid">
+                <div class="about-image reveal">
+                    <div class="about-img-accent"></div>
+                    <img src="https://image.qwenlm.ai/public_source/4d038d07-7f16-4e5d-bfae-2a2b7e366d52/1fce15ef4-dc47-4de4-84d8-4d4910d0180f.png" alt="Румбокс">
+                </div>
+                <div class="about-text reveal">
+                    <div class="section-label" style="justify-content: flex-start;">О румбоксах</div>
+                    <h2>Что такое румбокс?</h2>
+                    <p>Румбокс (roombox) — миниатюрная комната или интерьер, созданный вручную в масштабе 1:12 или 1:24. Это целое искусство, сочетающее моделирование, декорирование и дизайн.</p>
+                    <p>Каждый румбокс — это маленький мир с крошечной мебелью, аксессуарами, текстилем и освещением.</p>
+                    <div class="about-features">
+                        <div class="about-feat"><div class="about-feat-icon">🎨</div><div><div class="about-feat-title">Творчество</div><div class="about-feat-desc">Уникальные проекты</div></div></div>
+                        <div class="about-feat"><div class="about-feat-icon">📐</div><div><div class="about-feat-title">Точность</div><div class="about-feat-desc">Масштаб 1:12, 1:24</div></div></div>
+                        <div class="about-feat"><div class="about-feat-icon">🌿</div><div><div class="about-feat-title">Эко-материалы</div><div class="about-feat-desc">Дерево, ткань, глина</div></div></div>
+                        <div class="about-feat"><div class="about-feat-icon">💡</div><div><div class="about-feat-title">LED свет</div><div class="about-feat-desc">Реалистичная подсветка</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: var(--bg-alt);">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-label">Галерея</div>
+                <h2 class="section-title">Вдохновляющие работы</h2>
+                <p class="section-subtitle">Красота в деталях — готовые румбоксы мастеров</p>
+            </div>
+            <div class="gallery-grid reveal" id="homeGallery"></div>
+            <div style="text-align: center; margin-top: 40px;" class="reveal">
+                <button class="btn btn-outline" onclick="navigate('gallery')">Открыть галерею →</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: var(--bg-dark); color: white; text-align: center;">
+        <div class="section-container reveal">
+            <div class="section-label" style="color: var(--primary-light);">Начните сейчас</div>
+            <h2 class="section-title" style="color: white;">Готовы создать свой первый румбокс?</h2>
+            <p class="section-subtitle" style="color: rgba(255,255,255,0.6);">Откройте каталог и выберите проект, который вас вдохновляет</p>
+            <div style="margin-top: 40px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="navigate('catalog')">Открыть каталог</button>
+                <button class="btn btn-ghost" style="color: rgba(255,255,255,0.7); border: 2px solid rgba(255,255,255,0.2);" onclick="navigate('blog')">Читать блог</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ==================== CATALOG PAGE ==================== -->
+<div class="page" id="page-catalog">
+    <section class="section" style="padding-top: 60px;">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Каталог</div>
+                <h2 class="section-title">Все проекты румбоксов</h2>
+                <p class="section-subtitle">Выбирайте проект по категории, сложности и времени</p>
+            </div>
+            <div class="catalog-toolbar">
+                <div class="catalog-filters" id="catalogFilters">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="living">🛋️ Гостиная</button>
+                    <button class="filter-btn" data-filter="kitchen">🍳 Кухня</button>
+                    <button class="filter-btn" data-filter="bedroom">🛏️ Спальня</button>
+                    <button class="filter-btn" data-filter="workshop">🎨 Мастерская</button>
+                    <button class="filter-btn" data-filter="garden">🌿 Сад</button>
+                    <button class="filter-btn" data-filter="bathroom">🛁 Ванная</button>
+                    <button class="filter-btn" data-filter="study">📚 Кабинет</button>
+                    <button class="filter-btn" data-filter="nursery">🧸 Детская</button>
+                </div>
+                <div class="catalog-sort">
+                    <label>Сортировка:</label>
+                    <select id="catalogSort" onchange="sortCatalog(this.value)">
+                        <option value="default">По умолчанию</option>
+                        <option value="name">По названию</option>
+                        <option value="time-asc">По времени ↑</option>
+                        <option value="time-desc">По времени ↓</option>
+                        <option value="diff-easy">Сначала лёгкие</option>
+                        <option value="diff-hard">Сначала сложные</option>
+                    </select>
+                </div>
+            </div>
+            <div class="catalog-grid" id="catalogGrid"></div>
+            <div class="catalog-empty" id="catalogEmpty" style="display:none;">
+                <span>🔍</span>
+                <h3>Ничего не найдено</h3>
+                <p>Попробуйте изменить фильтры или поисковый запрос</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ==================== GALLERY PAGE ==================== -->
+<div class="page" id="page-gallery">
+    <section class="section" style="padding-top: 60px;">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Галерея</div>
+                <h2 class="section-title">Все работы</h2>
+                <p class="section-subtitle">Кликните на изображение для просмотра в полном размере</p>
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+    </section>
+</div>
+
+<!-- ==================== BLOG PAGE ==================== -->
+<div class="page" id="page-blog">
+    <section class="section" style="padding-top: 60px;">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Блог</div>
+                <h2 class="section-title">Статьи и советы</h2>
+                <p class="section-subtitle">Полезные материалы для мастеров миниатюрных интерьеров</p>
+            </div>
+            <div class="blog-grid" id="blogGrid"></div>
+        </div>
+    </section>
+</div>
+
+<!-- ==================== ABOUT PAGE ==================== -->
+<div class="page" id="page-about">
+    <div class="page-hero">
+        <div class="section-label">О проекте</div>
+        <h1>О проекте <em>Миниатюрный мир</em></h1>
+        <p>Дипломный проект — информационный портал для ведения проектов миниатюрных интерьеров</p>
+    </div>
+    <div class="page-content">
+        <h2>Что это такое?</h2>
+        <p>Миниатюрный мир — информационный портал, созданный как дипломный проект. Он объединяет каталог румбоксов, подробные описания, списки материалов, пошаговые инструкции, галерею, блог и FAQ.</p>
+        <p>Сайт ориентирован на любителей рукоделия, начинающих и опытных мастеров.</p>
+
+        <div class="values-grid">
+            <div class="value-card reveal"><div class="value-icon">📚</div><h3>Структурированная база</h3><p>Все проекты с описаниями, материалами и инструкциями</p></div>
+            <div class="value-card reveal reveal-delay-1"><div class="value-icon">🔍</div><h3>Удобный поиск</h3><p>Фильтры, сортировка и полнотекстовый поиск</p></div>
+            <div class="value-card reveal reveal-delay-2"><div class="value-icon">💡</div><h3>Вдохновение</h3><p>Галерея, блог и рекомендации от мастеров</p></div>
+        </div>
+
+        <h2>Цели проекта</h2>
+        <p>• Хранить и систематизировать информацию о проектах румбоксов<br>
+        • Быстро находить проекты по категориям и сложности<br>
+        • Изучать пошаговые инструкции и списки материалов<br>
+        • Находить вдохновение в галерее и блоге<br>
+        • Сохранять проекты в избранное<br>
+        • Делиться впечатлениями и отзывами</p>
+
+        <h2 style="margin-top: 48px;">Этапы разработки</h2>
+        <div class="timeline">
+            <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-year">Январь 2026</div><div class="tl-text">Анализ темы, исследование ЦА, определение структуры</div></div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-year">Февраль 2026</div><div class="tl-text">Дизайн-концепция, прототипы и макеты страниц</div></div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-year">Март 2026</div><div class="tl-text">Вёрстка, адаптивный дизайн, анимации и интерактив</div></div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-year">Апрель 2026</div><div class="tl-text">Тестирование, оптимизация, подготовка к защите</div></div></div>
+        </div>
+
+        <h2>Технологии</h2>
+        <p>Проект реализован на чистом HTML5, CSS3 и JavaScript без использования фреймворков.</p>
+        <div class="tech-tags">
+            <span class="tech-tag">HTML5</span>
+            <span class="tech-tag">CSS3 (Grid/Flexbox)</span>
+            <span class="tech-tag">JavaScript ES6+</span>
+            <span class="tech-tag">Intersection Observer</span>
+            <span class="tech-tag">CSS Variables</span>
+            <span class="tech-tag">CSS Animations</span>
+            <span class="tech-tag">Responsive Design</span>
+            <span class="tech-tag">SPA Routing</span>
+            <span class="tech-tag">LocalStorage API</span>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== FAQ PAGE ==================== -->
+<div class="page" id="page-faq">
+    <div class="page-hero">
+        <div class="section-label">Вопросы и ответы</div>
+        <h1>Часто задаваемые <em>вопросы</em></h1>
+        <p>Ответы на популярные вопросы о румбоксах и нашем портале</p>
+    </div>
+    <div class="page-content">
+        <div class="faq-list" id="faqList"></div>
+    </div>
+</div>
+
+<!-- ==================== CONTACTS PAGE ==================== -->
+<div class="page" id="page-contacts">
+    <div class="page-hero">
+        <div class="section-label">Контакты</div>
+        <h1>Свяжитесь с <em>нами</em></h1>
+        <p>Есть вопросы или предложения? Мы всегда рады обратной связи!</p>
+    </div>
+    <div class="contacts-grid" style="max-width: 1400px; margin: 0 auto; padding: 60px 48px;">
+        <div>
+            <div class="contacts-info">
+                <h3>Давайте создавать вместе</h3>
+                <p>Мы открыты к сотрудничеству, обмену идеями и совместным проектам.</p>
+                <div class="contacts-list">
+                    <div class="contacts-item"><div class="contacts-item-icon">📧</div><div><div class="contacts-item-label">Email</div><div class="contacts-item-value">hello@miniworld.ru</div></div></div>
+                    <div class="contacts-item"><div class="contacts-item-icon">📱</div><div><div class="contacts-item-label">Телефон</div><div class="contacts-item-value">+7 (999) 123-45-67</div></div></div>
+                    <div class="contacts-item"><div class="contacts-item-icon">📍</div><div><div class="contacts-item-label">Адрес</div><div class="contacts-item-value">Москва, ул. Творческая, 12</div></div></div>
+                    <div class="contacts-item"><div class="contacts-item-icon">💬</div><div><div class="contacts-item-label">Telegram</div><div class="contacts-item-value">@miniworld_project</div></div></div>
+                </div>
+            </div>
+            <div class="map-placeholder">🗺️</div>
+        </div>
+        <div class="contacts-form">
+            <form onsubmit="handleFormSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Имя</label><input type="text" class="form-input" placeholder="Ваше имя" required></div>
+                    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="your@email.com" required></div>
+                </div>
+                <div class="form-group"><label class="form-label">Тема</label><input type="text" class="form-input" placeholder="О чём хотите поговорить?"></div>
+                <div class="form-group"><label class="form-label">Сообщение</label><textarea class="form-textarea" placeholder="Расскажите подробнее..." required></textarea></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;" id="formBtn">Отправить сообщение →</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== FAVORITES PAGE ==================== -->
+<div class="page" id="page-favorites">
+    <div class="page-hero">
+        <div class="section-label">Избранное</div>
+        <h1>Ваши <em>избранные</em> проекты</h1>
+        <p>Проекты, которые вы сохранили для вдохновения</p>
+    </div>
+    <section class="section" style="padding-top: 20px;">
+        <div class="section-container">
+            <div id="favContent"></div>
+        </div>
+    </section>
+</div>
+
+<!-- ==================== PROJECT PAGE ==================== -->
+<div class="page" id="page-project">
+    <div class="project-hero">
+        <img id="phImg" src="" alt="">
+        <div class="project-hero-overlay">
+            <div class="ph-badge" id="phCat"></div>
+            <h1 class="ph-title" id="phTitle"></h1>
+            <div class="ph-meta"><span id="phTime"></span><span id="phDiff"></span></div>
+        </div>
+        <button class="project-back" onclick="goBack()">← Назад</button>
+    </div>
+    <div class="project-content">
+        <div class="project-main">
+            <h2>Описание</h2>
+            <p id="pDesc"></p>
+            <div class="project-gallery" id="pGallery"></div>
+            <h2>Детали проекта</h2>
+            <div class="tabs" id="projectTabs">
+                <button class="tab-btn active" data-tab="steps">📋 Этапы</button>
+                <button class="tab-btn" data-tab="materials">🧰 Материалы</button>
+                <button class="tab-btn" data-tab="reviews">⭐ Отзывы</button>
+            </div>
+            <div class="tab-content active" id="tab-steps">
+                <div class="steps-list" id="pSteps"></div>
+            </div>
+            <div class="tab-content" id="tab-materials">
+                <div class="materials-grid" id="pMaterials"></div>
+            </div>
+            <div class="tab-content" id="tab-reviews">
+                <div class="reviews-list" id="pReviews"></div>
+                <div class="review-form-container" style="margin-top: 32px; padding: 32px; background: var(--bg-alt); border-radius: var(--radius-lg);">
+                    <h3 style="margin-bottom: 20px;">Оставить отзыв</h3>
+                    <form onsubmit="addReview(event)" style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 1;">
+                                <label class="form-label">Ваше имя</label>
+                                <input type="text" class="form-input" id="reviewName" placeholder="Как вас зовут?" required>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label class="form-label">Оценка</label>
+                                <select class="form-input" id="reviewStars" required>
+                                    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                                    <option value="4">⭐⭐⭐⭐ (4)</option>
+                                    <option value="3">⭐⭐⭐ (3)</option>
+                                    <option value="2">⭐⭐ (2)</option>
+                                    <option value="1">⭐ (1)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ваш отзыв</label>
+                            <textarea class="form-textarea" id="reviewText" placeholder="Поделитесь впечатлениями о проекте..." required style="min-height: 100px;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Отправить отзыв →</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="project-sidebar">
+            <div class="sidebar-card">
+                <h3>Информация</h3>
+                <div class="sidebar-info">
+                    <div class="sidebar-info-item"><span class="sidebar-label">Категория</span><span class="sidebar-value" id="siCat"></span></div>
+                    <div class="sidebar-info-item"><span class="sidebar-label">Время</span><span class="sidebar-value" id="siTime"></span></div>
+                    <div class="sidebar-info-item"><span class="sidebar-label">Сложность</span><span class="sidebar-value" id="siDiff"></span></div>
+                    <div class="sidebar-info-item"><span class="sidebar-label">Масштаб</span><span class="sidebar-value" id="siScale"></span></div>
+                    <div class="sidebar-info-item"><span class="sidebar-label">Материалов</span><span class="sidebar-value" id="siCount"></span></div>
+                </div>
+            </div>
+            <div class="sidebar-card">
+                <h3>Похожие проекты</h3>
+                <div class="similar-list" id="similarList"></div>
+            </div>
+            <div class="sidebar-card" style="background: var(--bg-dark); color: white; border: none;">
+                <h3 style="color: white;">Нравится проект?</h3>
+                <p style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 20px;">Поделитесь с друзьями или сохраните в избранное.</p>
+                <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="showToast('📋 Ссылка скопирована!')">Поделиться →</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer" id="siteFooter">
+    <div class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="nav-logo" onclick="navigate('home')" style="cursor: pointer;">
+                    <div class="nav-logo-icon">М</div>
+                    <span class="nav-logo-text" style="color: white;">Миниатюрный мир</span>
+                </div>
+                <p>Информационный портал для ведения проектов миниатюрных интерьеров. Дипломный проект, 2026.</p>
+            </div>
+            <div class="footer-col"><h4>Навигация</h4><ul><li><a onclick="navigate('home')">Главная</a></li><li><a onclick="navigate('catalog')">Каталог</a></li><li><a onclick="navigate('gallery')">Галерея</a></li><li><a onclick="navigate('blog')">Блог</a></li></ul></div>
+            <div class="footer-col"><h4>Информация</h4><ul><li><a onclick="navigate('about')">О проекте</a></li><li><a onclick="navigate('faq')">FAQ</a></li><li><a onclick="navigate('contacts')">Контакты</a></li><li><a onclick="navigate('favorites')">Избранное</a></li></ul></div>
+            <div class="footer-col"><h4>Категории</h4><ul><li><a onclick="filterGo('living')">Гостиные</a></li><li><a onclick="filterGo('kitchen')">Кухни</a></li><li><a onclick="filterGo('bedroom')">Спальни</a></li><li><a onclick="filterGo('workshop')">Мастерские</a></li></ul></div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Миниатюрный мир. Дипломный проект. Все права защищены.</p>
+            <div class="footer-socials"><div class="footer-social">📷</div><div class="footer-social">💬</div><div class="footer-social">📌</div><div class="footer-social">▶️</div></div>
+        </div>
+    </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="js/script.js"></script>
+</body>
+</html>
